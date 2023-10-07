@@ -1,11 +1,5 @@
 import { relations, sql } from 'drizzle-orm';
-import {
-  bigint,
-  datetime,
-  mysqlTable,
-  text,
-  varchar,
-} from 'drizzle-orm/mysql-core';
+import { bigint, datetime, mysqlTable, text, varchar } from 'drizzle-orm/mysql-core';
 import { task } from './task';
 
 export const list = mysqlTable('lists', {
@@ -19,3 +13,5 @@ export const list = mysqlTable('lists', {
 export const listRelations = relations(list, ({ many }) => ({
   tasks: many(task),
 }));
+
+export type List = typeof list.$inferSelect;
