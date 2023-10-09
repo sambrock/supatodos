@@ -1,3 +1,5 @@
+import { InitializeListStore } from '@/components/InitializeListStore';
+import { ListTitleEditable } from '@/components/list/ListTitleEditable';
 import { getInitialListData } from '@/lib/api/getInitialListData';
 
 type Props = {
@@ -8,7 +10,7 @@ type Props = {
 };
 
 export default async function UserListPage({ params }: Props) {
-  const { username, publicId } = params;
+  const { publicId } = params;
 
   const response = await getInitialListData(publicId);
 
@@ -17,7 +19,8 @@ export default async function UserListPage({ params }: Props) {
 
   return (
     <main className="min-h-screen justify-between p-24">
-      page: {username} {publicId} {data.title}
+      <ListTitleEditable initialTitle={data.initialList.title || ''} />
+      <InitializeListStore initialList={data.initialList} initialTasks={data.initialTasks} />
     </main>
   );
 }

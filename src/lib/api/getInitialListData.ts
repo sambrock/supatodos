@@ -25,8 +25,13 @@ export const getInitialListData = cache(async (publicId: string) => {
       },
     };
 
+  const { tasks, ...initialList } = data;
+
   return {
     success: true,
-    data,
+    data: {
+      initialList,
+      initialTasks: tasks,
+    },
   };
 }) satisfies Api;

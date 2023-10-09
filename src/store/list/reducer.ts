@@ -6,8 +6,12 @@ import { useTransactionsStore } from '../transactions/store';
 
 const pushTransactions = useTransactionsStore.getState().push;
 
-const setTitle = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'SET_TITLE'>) => {
-  draft.data.list!.title = payload ?? '';
+const updateList = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'UPDATE_LIST'>) => {
+  const list = draft.data.list;
+
+  if (list) {
+    Object.assign(list, payload);
+  }
 });
 
 const newTask = produce((draft: Draft<ListStore>, payload: ActionPayload<'NEW_TASK'>) => {
@@ -20,12 +24,12 @@ const newTask = produce((draft: Draft<ListStore>, payload: ActionPayload<'NEW_TA
   draft.data.tasks!.set(draft.data.tasks!.size, { title: payload?.title });
 });
 
-const updateTaskAction = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'UPDATE_TASK'>) => {
+const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'UPDATE_TASK'>) => {
   const { index, ...updates } = payload;
   const task = draft.data.tasks!.get(index);
   // draft.data.tasks!.set(index, { ...task, ...updates });
 
-  if(task) {
+  if (task) {
     Object.assign(task, updates);
   }
 });
@@ -43,8 +47,8 @@ export const reducer = (state: ListStore, action: Action): ListStore => {
         },
       };
     }
-    case 'SET_TITLE': {
-      const [newState, transactions, inverse] = setTitle(state, action.payload);
+    case 'UPDATE_LIST': {
+      const [newState, transactions, inverse] = updateList(state, action.payload);
       pushTransactions('LIST', transactions, inverse);
       return newState;
     }
@@ -53,7 +57,7 @@ export const reducer = (state: ListStore, action: Action): ListStore => {
       return newState;
     }
     case 'UPDATE_TASK': {
-      const [newState, transactions, inverse] = updateTaskAction(state, action.payload);
+      const [newState, transactions, inverse] = updateTask(state, action.payload);
       pushTransactions('LIST', transactions, inverse);
       return newState;
     }
