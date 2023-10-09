@@ -1,16 +1,35 @@
 'use client';
 
 import { Task } from '@/lib/db/schema';
+import { useListStore } from '@/store/list/store';
 
 type Props = {
-  task: Omit<Task, 'id'>;
+  index: number;
+  initialTask: Omit<Task, 'id'>;
 };
 
-export const ListTask = ({ task }: Props) => {
+const dispatch = useListStore.getState().dispatch;
+
+export const ListTask = ({ initialTask, index }: Props) => {
+  const task = useListStore((state) => state.data.tasks?.get(index) ?? initialTask);
+
   return (
-    <div key={task.id} className="flex gap-1 items-center">
+    <div className="flex gap-1 items-center">
       <input type="checkbox" checked={task.isComplete ?? false} onChange={(e) => console.log('check')} />
-      <span>{task.title}</span>
+      <input
+        className="bg-neutral-800"
+        type="text"
+        value={task.title}
+        onChange={(e) =>
+          dispatch({
+            type: 'UPDATE_TASK',
+            payload: {
+              index,
+              title: e.target.value,
+            },
+          })
+        }
+      />
     </div>
   );
 };

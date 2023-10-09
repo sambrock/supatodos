@@ -1,4 +1,4 @@
-import { type Draft, produceWithPatches } from 'immer';
+import { type Draft, produce, produceWithPatches } from 'immer';
 
 import type { ListStore } from './store.types';
 import type { Action, ActionPayload } from './action.types';
@@ -10,13 +10,25 @@ const setTitle = produceWithPatches((draft: Draft<ListStore>, payload: ActionPay
   draft.data.list!.title = payload ?? '';
 });
 
-// const addTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'ADD_TASK'>) => {
-//   draft.data.tasks!.set(draft.data.tasks!.size, {
-//     title: payload.title ?? '',
-//     isComplete: false,
+const newTask = produce((draft: Draft<ListStore>, payload: ActionPayload<'NEW_TASK'>) => {
+  // clear any empty tasks
+  for (const [index, task] of draft.data.tasks!.entries()) {
+    if (task.title === '') {
+      draft.data.tasks!.delete(index);
+    }
+  }
+  draft.data.tasks!.set(draft.data.tasks!.size, { title: payload?.title });
+});
 
-//   });
-// }
+const updateTaskAction = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'UPDATE_TASK'>) => {
+  const { index, ...updates } = payload;
+  const task = draft.data.tasks!.get(index);
+  // draft.data.tasks!.set(index, { ...task, ...updates });
+
+  if(task) {
+    Object.assign(task, updates);
+  }
+});
 
 export const reducer = (state: ListStore, action: Action): ListStore => {
   console.log(action);
@@ -32,8 +44,17 @@ export const reducer = (state: ListStore, action: Action): ListStore => {
       };
     }
     case 'SET_TITLE': {
-      const [newState, transactions, inverseTransactions] = setTitle(state, action.payload);
-      pushTransactions('LIST', transactions, inverseTransactions);
+      const [newState, transactions, inverse] = setTitle(state, action.payload);
+      pushTransactions('LIST', transactions, inverse);
+      return newState;
+    }
+    case 'NEW_TASK': {
+      const newState = newTask(state, action.payload);
+      return newState;
+    }
+    case 'UPDATE_TASK': {
+      const [newState, transactions, inverse] = updateTaskAction(state, action.payload);
+      pushTransactions('LIST', transactions, inverse);
       return newState;
     }
     default: {

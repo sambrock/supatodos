@@ -5,7 +5,7 @@ import { list } from './list';
 export const task = mysqlTable('tasks', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
   publicId: varchar('publicId', { length: 12 }).unique().notNull(),
-  title: text('title').notNull(),
+  title: text('title').default('').notNull(),
   isComplete: boolean('isComplete').default(false),
   completedAt: datetime('completedAt'),
   createdAt: datetime('createdAt').default(sql`CURRENT_TIMESTAMP`),

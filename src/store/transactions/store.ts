@@ -1,7 +1,10 @@
+import { enableMapSet, enablePatches, applyPatches } from 'immer';
 import { create } from 'zustand';
-import { applyPatches } from 'immer';
 import type { TransactionsStore } from './store.types';
 import { useListStore } from '../list/store';
+
+enablePatches();
+enableMapSet();
 
 export const useTransactionsStore = create<TransactionsStore>((set) => ({
   stack: [],

@@ -4,6 +4,8 @@ import { list } from '@/lib/db/schema';
 import { ListTitle } from './Title';
 import { ListTask } from './ListTask';
 import { InitializeStore } from './initialize-store';
+import { TaskList } from './TaskList';
+import { NewTask } from './NewTask';
 
 export default async function Home() {
   const data = await db.query.list.findFirst({
@@ -22,11 +24,8 @@ export default async function Home() {
   return (
     <main className="min-h-screen justify-between p-24">
       <ListTitle defaultTitle={data?.title ?? ''} />
-      <div className="space-y-1">
-        {data?.tasks.map((task) => (
-          <ListTask key={task.publicId} task={task} />
-        ))}
-      </div>
+      <TaskList />
+      <NewTask />
       {data && (
         <InitializeStore
           initialList={{
