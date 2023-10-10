@@ -12,8 +12,7 @@ module.exports = {
       },
       colors: {
         neutral: {
-          bg: '#27272b',
-          text: '#fdfdfd',
+          bg: '#242526',
         },
       },
     },

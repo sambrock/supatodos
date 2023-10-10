@@ -6,10 +6,14 @@ export const task = mysqlTable('tasks', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
   publicId: varchar('publicId', { length: 12 }).unique().notNull(),
   title: text('title').default('').notNull(),
-  isComplete: boolean('isComplete').default(false),
+  isComplete: boolean('isComplete').default(false).notNull(),
   completedAt: datetime('completedAt'),
-  createdAt: datetime('createdAt').default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: datetime('updatedAt').default(sql`CURRENT_TIMESTAMP`),
+  createdAt: datetime('createdAt')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: datetime('updatedAt')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
   listId: bigint('listId', { mode: 'number' }).notNull(),
 });
 
