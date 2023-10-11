@@ -1,7 +1,8 @@
 import { getInitialListData } from '@/lib/api/getInitialListData';
 import { InitializeListStore } from '@/components/InitializeListStore';
-import { EditListTitle } from '@/components/list/EditListTitle';
-import { EditTask } from '@/components/task/EditTask';
+import { ListHeader } from '@/components/list/ListHeader';
+import { Task } from '@/components/task/Task';
+import { NewTask } from '@/components/new-task/NewTask';
 
 type Props = {
   params: {
@@ -11,7 +12,7 @@ type Props = {
 };
 
 export default async function UserListPage({ params }: Props) {
-  const { publicId } = params;
+  const { username, publicId } = params;
 
   const response = await getInitialListData(publicId);
 
@@ -19,14 +20,19 @@ export default async function UserListPage({ params }: Props) {
   const { data } = response;
 
   return (
-    <main className="min-h-screen justify-between px-24 py-12 space-y-8">
-      <EditListTitle initialTitle={data.initialList.title || ''} />
-
-      <ul className="space-y-3">
+    <main className="justify-between py-8 container mx-auto">
+      <ListHeader
+        username={username}
+        title={data.initialList.title || ''}
+        updatedAt={data.initialList.updatedAt || new Date()}
+      />
+      <ul className="my-4 space-y-2">
         {data.initialTasks.map((task, index) => (
-          <EditTask key={index} index={index} initialTask={task} />
+          <Task key={index} index={index} initialTask={task} />
         ))}
       </ul>
+
+      <NewTask className="bottom-6 z-50 fixed max-w-lg" />
 
       <InitializeListStore initialList={data.initialList} initialTasks={data.initialTasks} />
     </main>

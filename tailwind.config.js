@@ -6,9 +6,16 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    container: {
+      screens: {
+        md: '100%',
+        lg: '980px',
+      }
+    },
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', 'sans-serif'],
+        logo: ['var(--font-logo)', 'sans-serif'],
       },
       colors: {
         neutral: {
