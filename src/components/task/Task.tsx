@@ -16,7 +16,7 @@ export const Task = ({ index, initialTask }: Props) => {
   const task = useListStore((state) => state.data.tasks?.get(index) ?? initialTask);
 
   return (
-    <li className={cx('flex space-x-3 px-3 py-3 bg-[#ffffff04] text-sm rounded-lg items-center w-1/2')}>
+    <li className={cx('flex space-x-3 px-3 py-3 bg-[#ffffff04] text-sm rounded-lg items-center max-w-lg')}>
       <TaskCheck
         isComplete={task.isComplete ?? false}
         onCheckedChange={(checked) => {

@@ -10,12 +10,13 @@ module.exports = {
       screens: {
         md: '100%',
         lg: '980px',
-      }
+      },
     },
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', 'sans-serif'],
         logo: ['var(--font-logo)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
       },
       colors: {
         neutral: {
