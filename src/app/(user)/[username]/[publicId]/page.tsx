@@ -26,7 +26,7 @@ export default async function UserListPage({ params }: Props) {
         title={data.initialList.title || ''}
         updatedAt={data.initialList.updatedAt || new Date()}
       />
-      <ul className="my-4 grid grid-cols-2 gap-3">
+      <ul className="my-4 grid grid-cols-1 gap-3">
         {data.initialTasks.map((task, index) => (
           <Task key={index} index={index} initialTask={task} />
         ))}

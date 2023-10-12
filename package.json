@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:studio": "drizzle-kit studio",
-    "db:push": "drizzle-kit push:mysql"
+    "db:push": "drizzle-kit push:mysql",
+    "db:seed": "node --loader esbuild-register/loader -r esbuild-register src/lib/db/seed.ts"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -32,6 +33,7 @@
     "@types/react": "18.2.25",
     "@types/react-dom": "18.2.10",
     "autoprefixer": "10.4.16",
+    "dotenv": "^16.3.1",
     "drizzle-kit": "^0.19.13",
     "eslint": "8.50.0",
     "eslint-config-next": "13.5.4",
