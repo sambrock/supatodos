@@ -6,6 +6,7 @@ export const useListStore = create<ListStore>((set) => ({
   data: {
     list: null,
     tasks: null,
+    tags: null,
   },
 
   dispatch: (action) => set((state) => reducer(state, action)),

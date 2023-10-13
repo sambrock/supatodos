@@ -1,8 +1,8 @@
 import { getInitialListData } from '@/lib/api/getInitialListData';
-import { InitializeListStore } from '@/components/InitializeListStore';
 import { ListHeader } from '@/components/list/ListHeader';
 import { Task } from '@/components/task/Task';
 import { NewTask } from '@/components/new-task/NewTask';
+import { InitializeClient } from './InitializeClient';
 
 type Props = {
   params: {
@@ -23,7 +23,7 @@ export default async function UserListPage({ params }: Props) {
     <main className="justify-between pb-6 pt-6 container mx-auto">
       <ListHeader
         username={username}
-        title={data.initialList.title || ''}
+        name={data.initialList.name || ''}
         updatedAt={data.initialList.updatedAt || new Date()}
       />
       <ul className="my-4 grid grid-cols-1 gap-3">
@@ -34,7 +34,11 @@ export default async function UserListPage({ params }: Props) {
 
       <NewTask className="bottom-4 z-50 fixed container" />
 
-      <InitializeListStore initialList={data.initialList} initialTasks={data.initialTasks} />
+      <InitializeClient
+        initialList={data.initialList}
+        initialTasks={data.initialTasks}
+        initialTags={data.initialTags}
+      />
     </main>
   );
 }

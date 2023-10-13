@@ -8,12 +8,28 @@ export const getInitialListData = cache(async (publicId: string) => {
   const data = await db.query.list.findFirst({
     where: eq(list.publicId, publicId),
     with: {
+      tags: {
+        columns: { id: false, listId: false },
+      },
       tasks: {
         limit: 50,
         columns: { id: false },
+        with: {
+          tags: {
+            columns: { taskId: false, tagId: false },
+            with: {
+              tag: {
+                columns: { id: false, listId: false, publicId: true },
+              },
+            },
+          },
+        },
       },
     },
     columns: { id: false },
+    // extras: {
+    //   tasksSize: sql<number>`length(${tag.id})`.as('tasks_size'),
+    // },
   });
 
   if (!data)
@@ -25,13 +41,14 @@ export const getInitialListData = cache(async (publicId: string) => {
       },
     };
 
-  const { tasks, ...initialList } = data;
+  const { tasks, tags, ...initialList } = data;
 
   return {
     success: true,
     data: {
       initialList,
-      initialTasks: tasks,
+      initialTasks: tasks.map((task) => ({ ...task, tags: task.tags.map(({ tag }) => tag.publicId) })),
+      initialTags: tags,
     },
   };
 }) satisfies Api;

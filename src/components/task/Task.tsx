@@ -1,14 +1,15 @@
 'use client';
 
-import type { Task as TaskSchema } from '@/lib/db/schema';
+import type { TaskWithRelations } from '@/lib/db/schema';
 import { cx } from '@/lib/utils';
 import { useListStore } from '@/store/list/store';
 import { TaskCheck } from './TaskCheck';
-import { Clock } from 'lucide-react';
+import { TaskPriority } from './TaskPriority';
+import { TaskTag } from './TaskTag';
 
 type Props = {
   index: number;
-  initialTask: Omit<TaskSchema, 'id'>;
+  initialTask: TaskWithRelations;
 };
 
 const dispatch = useListStore.getState().dispatch;
@@ -30,23 +31,17 @@ export const Task = ({ index, initialTask }: Props) => {
           });
         }}
       />
-      <div className={cx('w-full max-w-sm')}>
+      <div className={cx('w-full max-w-sm flex')}>
+        <TaskPriority className="mr-2" priority={task.priority} />
         <span
           className={cx({
             'line-through text-white/20': task.isComplete,
           })}
         >
-          {task.title}
+          {task.name}
         </span>
       </div>
-      <span
-        className={cx('font-medium ml-3', {
-          'text-red-500': !task.isComplete,
-          'text-white/20': task.isComplete,
-        })}
-      >
-        !!
-      </span>
+      <ul>{task.tags?.map((tag, index) => <TaskTag key={index} tag={tag} />)}</ul>
     </li>
   );
 };

@@ -1,13 +1,6 @@
-import { db } from '@/lib/db';
-import { task } from '@/lib/db/schema';
-import { generatePublicId } from '@/lib/utils';
+import { getInitialListData } from '@/lib/api/getInitialListData';
 
-export async function POST(request: Request) {
-  await db.insert(task).values({
-    publicId: generatePublicId(),
-    listId: 2,
-    title: 'Task',
-  });
-
-  return new Response('Hello, Next.js!');
+export async function GET(request: Request) {
+  const data = await getInitialListData('qm9aqdsbpo6j');
+  return new Response(JSON.stringify(data));
 }
