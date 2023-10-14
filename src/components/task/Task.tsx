@@ -32,7 +32,7 @@ export const Task = ({ index, initialTask }: Props) => {
         }}
       />
       <div className={cx('w-full max-w-sm flex')}>
-        <TaskPriority className="mr-2" priority={task.priority} />
+        <TaskPriority className="mr-2" priorityLevel={task.priorityLevel} />
         <span
           className={cx({
             'line-through text-white/20': task.isComplete,

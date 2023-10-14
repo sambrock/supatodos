@@ -1,32 +1,27 @@
-import type { Priority } from '@/lib/db/schema';
+import { PRIORITY_LEVELS } from '@/lib/constants';
 import { cx } from '@/lib/utils';
 
 type Props = {
-  priority: Priority;
+  priorityLevel: number;
 } & React.ComponentProps<'div'>;
 
-export const TaskPriority = ({ priority, ...divProps }: Props) => {
+export const TaskPriority = ({ priorityLevel, ...divProps }: Props) => {
   // Normal
-  if (priority.level === 1) return null;
-  // return (
-  //   <div {...divProps} className={cx('text-white/40 text-sm font-medium', divProps.className)}>
-  //     <span>-</span>
-  //   </div>
-  // );
+  if (priorityLevel === 1) return null;
 
   // Low
-  if (priority.level === 2)
+  if (priorityLevel === 2)
     return (
       <div {...divProps} className={cx('text-amber-500 text-sm font-medium', divProps.className)}>
-        <span>!</span>
+        <span>{PRIORITY_LEVELS.get(priorityLevel)?.shorthand}</span>
       </div>
     );
 
   // High
-  if (priority.level === 3)
+  if (priorityLevel === 3)
     return (
       <div {...divProps} className={cx('text-red-500 text-sm font-medium', divProps.className)}>
-        <span>!!</span>
+        <span>{PRIORITY_LEVELS.get(priorityLevel)?.shorthand}</span>
       </div>
     );
 };

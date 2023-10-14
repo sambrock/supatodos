@@ -1,4 +1,4 @@
-import type { List, Tag, Task, TaskWithRelations } from '@/lib/db/schema';
+import type { List, Tag, Task } from '@/lib/db/schema';
 
 export type ActionType = 'INITIALIZE' | 'UPDATE_LIST' | 'NEW_TASK' | 'UPDATE_TASK';
 
@@ -10,23 +10,32 @@ interface BaseAction<T extends ActionType> {
 interface InitializeAction extends BaseAction<'INITIALIZE'> {
   payload: {
     list: List;
-    tasks: TaskWithRelations[];
+    tasks: Task[];
     tags: Tag[];
   };
 }
 
 interface UpdateListAction extends BaseAction<'UPDATE_LIST'> {
-  payload: Partial<List>;
+  payload: {
+    list: Partial<List>;
+  };
 }
 
 interface NewTaskAction extends BaseAction<'NEW_TASK'> {
-  payload?: {
-    title: string;
+  payload: {
+    task: {
+      name: string;
+      priorityLevel?: number;
+    };
+    tags: Partial<Tag>[];
   };
 }
 
 interface UpdateTaskAction extends BaseAction<'UPDATE_TASK'> {
-  payload: Partial<Task> & { index: number };
+  payload: {
+    index: number;
+    task: Partial<Task>;
+  };
 }
 
 export type Action = InitializeAction | UpdateListAction | NewTaskAction | UpdateTaskAction;

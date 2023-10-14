@@ -1,13 +1,13 @@
 import { relations } from 'drizzle-orm';
-import { bigint, mysqlTable, primaryKey, text, tinyint, varchar } from 'drizzle-orm/mysql-core';
+import { bigint, mysqlTable, primaryKey, varchar } from 'drizzle-orm/mysql-core';
 import { task } from './task';
 import { list } from './list';
 
 export const tag = mysqlTable('tags', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
   publicId: varchar('publicId', { length: 12 }).unique().notNull(),
-  name: text('name').default('').notNull(),
-  color: tinyint('color').default(1).notNull(),
+  name: varchar('name', { length: 255 }).default('').notNull(),
+  color: varchar('color', { length: 20 }).default('neutral').notNull(),
   listId: bigint('listId', { mode: 'number' }).notNull(),
 });
 

@@ -6,3 +6,5 @@ export const PRIORITY_LEVELS = new Map([
   [2, { label: 'Medium', shorthand: '!' }],
   [3, { label: 'High', shorthand: '!!' }],
 ] as const);
+
+export const TAG_COLORS = new Map([['neutral', { hex: '#ffffff' }]] as const);

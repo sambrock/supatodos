@@ -3,6 +3,7 @@ import { type Draft, produce, produceWithPatches } from 'immer';
 import type { ListStore } from './store.types';
 import type { Action, ActionPayload } from './action.types';
 import { useTransactionsStore } from '../transactions/store';
+import { generatePublicId } from '@/lib/utils';
 
 const pushTransactions = useTransactionsStore.getState().push;
 
@@ -22,20 +23,26 @@ const updateList = produceWithPatches((draft: Draft<ListStore>, payload: ActionP
 });
 
 const newTask = produce((draft: Draft<ListStore>, payload: ActionPayload<'NEW_TASK'>) => {
-  // clear any empty tasks
-  for (const [index, task] of draft.data.tasks!.entries()) {
-    if (task.title === '') {
-      draft.data.tasks!.delete(index);
-    }
+  let tags = payload.tags;
+  if (tags.filter((tag) => tag.publicId === '').length > 0) {
+    const publicId = generatePublicId();
+    draft.data.tags!.set(publicId, {
+      color: 1,
+    });
   }
-  draft.data.tasks!.set(draft.data.tasks!.size, {
-    title: payload?.title || '',
+
+  const task = payload.task;
+  const size = draft.data.tasks!.size;
+
+  draft.data.tasks!.set(size, {
+    name: task.name,
+    publicId: generatePublicId(),
+    priorityLevel: task.priorityLevel || 1,
+    tags: [],
     isComplete: false,
     completedAt: null,
-    priorityId: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-    listId: draft.data.list!.id,
   });
 });
 

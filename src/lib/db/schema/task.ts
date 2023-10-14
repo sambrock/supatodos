@@ -27,5 +27,5 @@ export const taskRelations = relations(task, ({ one, many }) => ({
   tags: many(tagsToTasks),
 }));
 
-export type Task = Omit<typeof task.$inferSelect, 'id'>;
-export type TaskWithRelations = Task & { tags: Tag[] };
+export type Task = Omit<typeof task.$inferSelect, 'id' | 'listId'>;
+export type TaskWithRelations = Task & { tags: string[] };
