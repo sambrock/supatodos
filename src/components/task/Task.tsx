@@ -2,7 +2,7 @@
 
 import type { Task as _Task } from '@/lib/db/schema';
 import { cx } from '@/lib/utils';
-import { useListStore } from '@/store/list/store';
+import { useListStore } from '@/store/list-edit/store';
 import { TaskCheck } from './TaskCheck';
 import { TaskPriority } from './TaskPriority';
 
@@ -25,6 +25,7 @@ export const Task = ({ initialTask }: Props) => {
             payload: {
               publicId: initialTask.publicId,
               updates: {
+                title: 'Completed!!',
                 isComplete: Boolean(checked.valueOf()),
               },
             },

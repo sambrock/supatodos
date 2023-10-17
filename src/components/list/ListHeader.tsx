@@ -1,7 +1,7 @@
 'use client';
 
 import { timeAgo } from '@/lib/utils';
-import { useListStore } from '@/store/list/store';
+import { useListStore } from '@/store/list-edit/store';
 
 type Props = {
   username: string;

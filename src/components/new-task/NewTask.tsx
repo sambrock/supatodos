@@ -2,7 +2,7 @@
 
 import { Plus } from 'lucide-react';
 import { cx } from '@/lib/utils';
-import { useListStore } from '@/store/list/store';
+import { useListStore } from '@/store/list-edit/store';
 
 const dispatch = useListStore.getState().dispatch;
 
@@ -16,25 +16,50 @@ export const NewTask = ({ ...props }: Props) => {
         <input
           type="text"
           className="focus:outline-none bg-transparent w-full text-sm font-mono placeholder:text-white/30"
-          placeholder="Do the laundry -priority !! -tag dev,ui"
+          placeholder="Do the laundry -priority !! -tags dev,ui"
           onKeyDown={(e) => {
-            if(e.key === 'Enter') {
+            if (e.key === 'Enter') {
+              const parsed = parseNewTaskInput(e.currentTarget.value);
               dispatch({
                 type: 'NEW_TASK',
                 payload: {
                   task: {
-                    id: Date.now(),
-                    title: e.currentTarget.value,
-                    priorityLevel: 1,
-                    tags: [],
-                    completed: false,
+                    title: parsed.title,
+                    priorityLevel: parsed.priority,
                   },
                 },
-              })
+              });
             }
           }}
         />
       </div>
     </div>
   );
+};
+
+const parseNewTaskInput = (input: string) => {
+  const parts = input.split(' ');
+
+  let title = '';
+  let priority = 1;
+  let tags: string[] = [];
+
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (part === '-priority' || part === '-p') {
+      const priorityValue = parts[i + 1];
+      if (priorityValue === '1' || priorityValue === '!') priority = 2;
+      if (priorityValue === '2' || priorityValue === '!!') priority = 3;
+      i++;
+    } else if (part === '-tags' || part === '-t') {
+      tags = parts[i + 1].split(',');
+      i++;
+    } else {
+      title += part + ' ';
+    }
+  }
+
+  title = title.trim();
+
+  return { title, priority, tags };
 };

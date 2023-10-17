@@ -1,7 +1,7 @@
 'use client';
 
 import { memo, useEffect, useRef } from 'react';
-import { useListStore } from '@/store/list/store';
+import { useListStore } from '@/store/list-edit/store';
 import { cx } from '@/lib/utils';
 
 type Props = {

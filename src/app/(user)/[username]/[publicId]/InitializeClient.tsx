@@ -3,8 +3,7 @@
 import { useEffect } from 'react';
 import { useEventListener } from 'usehooks-ts';
 import type { List, Tag, TaskWithRelations } from '@/lib/db/schema';
-import { useListStore } from '@/store/list/store';
-import { handleRedoTransactions, handleUndoTransactions } from '@/store/transactions/store';
+import { listStoreHandlers, useListStore } from '@/store/list-edit/store';
 
 type Props = {
   initialList: List;
@@ -13,6 +12,12 @@ type Props = {
 };
 
 const dispatch = useListStore.getState().dispatch;
+
+useListStore.subscribe((state, prevState) => {
+  if (state.patches.saved.length === 0) return;
+  if (state.patches.saved.length === prevState.patches.saved.length) return;
+  console.log('should save', state.patches.saved[state.patches.saved.length - 1]);
+});
 
 export const InitializeClient = ({ initialList, initialTasks, initialTags }: Props) => {
   useEffect(() => {
@@ -29,12 +34,12 @@ export const InitializeClient = ({ initialList, initialTasks, initialTags }: Pro
   useEventListener('keydown', (e) => {
     if (e.key === 'z' && e.metaKey && e.shiftKey) {
       e.preventDefault();
-      handleRedoTransactions();
+      listStoreHandlers.redo();
       return;
     }
     if (e.key === 'z' && e.metaKey) {
       e.preventDefault();
-      handleUndoTransactions();
+      listStoreHandlers.undo();
       return;
     }
   });

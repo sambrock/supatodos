@@ -1,7 +1,7 @@
 'use client';
 
 import { Task as _Task } from '@/lib/db/schema';
-import { useListStore } from '@/store/list/store';
+import { useListStore } from '@/store/list-edit/store';
 import { Task } from '../task/Task';
 
 type Props = {

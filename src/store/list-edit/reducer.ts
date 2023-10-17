@@ -1,17 +1,13 @@
-import { type Draft, produce, produceWithPatches } from 'immer';
+import { type Draft, produce, produceWithPatches, Patch } from 'immer';
 
 import type { ListStore } from './store.types';
 import type { Action, ActionPayload } from './action.types';
-import { useTransactionsStore } from '../transactions/store';
 import { generatePublicId } from '@/lib/utils';
-
-const pushTransactions = useTransactionsStore.getState().push;
 
 const initializeStore = produce((draft: Draft<ListStore>, payload: ActionPayload<'INITIALIZE'>) => {
   const { list, tasks, tags } = payload;
   draft.data.list = list;
   draft.data.tasks = new Map(tasks.map((task, index) => [task.publicId, task]));
-  // draft.data.tags = new Map(tags.map((tag, index) => [index, tag]));
 });
 
 const updateList = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'UPDATE_LIST'>) => {
@@ -21,7 +17,7 @@ const updateList = produceWithPatches((draft: Draft<ListStore>, payload: ActionP
   if (list) Object.assign(list, updates);
 });
 
-const newTask = produce((draft: Draft<ListStore>, payload: ActionPayload<'NEW_TASK'>) => {
+const newTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'NEW_TASK'>) => {
   const task = payload.task;
   const taskPublicId = generatePublicId();
 
@@ -43,6 +39,12 @@ const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionP
   if (task) Object.assign(task, updates);
 });
 
+const newStateWithPatches = produce((draft: Draft<ListStore>, patches: [Patch[], Patch[]]) => {
+  draft.patches.stack = draft.patches.stack.slice(0, draft.patches.stackPointer + 1).concat([patches]);
+  draft.patches.stackPointer = draft.patches.stackPointer + 1;
+  draft.patches.saved = draft.patches.saved.concat([patches[0]]);
+});
+
 export const reducer = (state: ListStore, action: Action): ListStore => {
   console.log(action);
   switch (action.type) {
@@ -50,19 +52,17 @@ export const reducer = (state: ListStore, action: Action): ListStore => {
       const newState = initializeStore(state, action.payload);
       return newState;
     }
-    case 'UPDATE_LIST': {
-      const [newState, transactions, inverse] = updateList(state, action.payload);
-      pushTransactions('LIST', transactions, inverse);
-      return newState;
-    }
     case 'NEW_TASK': {
-      const newState = newTask(state, action.payload);
-      return newState;
+      const [newState, patches, inverse] = newTask(state, action.payload);
+      return newStateWithPatches(newState, [patches, inverse]);
+    }
+    case 'UPDATE_LIST': {
+      const [newState, patches, inverse] = updateList(state, action.payload);
+      return newStateWithPatches(newState, [patches, inverse]);
     }
     case 'UPDATE_TASK': {
-      const [newState, transactions, inverse] = updateTask(state, action.payload);
-      pushTransactions('LIST', transactions, inverse);
-      return newState;
+      const [newState, patches, inverse] = updateTask(state, action.payload);
+      return newStateWithPatches(newState, [patches, inverse]);
     }
     default: {
       return state;
