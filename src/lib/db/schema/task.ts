@@ -6,7 +6,7 @@ import { type Tag, tagsToTasks } from './tag';
 export const task = mysqlTable('tasks', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
   publicId: varchar('publicId', { length: 12 }).unique().notNull(),
-  name: text('name').default('').notNull(),
+  title: text('title').default('').notNull(),
   isComplete: boolean('isComplete').default(false).notNull(),
   completedAt: datetime('completedAt'),
   createdAt: datetime('createdAt')

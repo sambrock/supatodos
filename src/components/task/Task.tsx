@@ -1,21 +1,19 @@
 'use client';
 
-import type { TaskWithRelations } from '@/lib/db/schema';
+import type { Task as _Task } from '@/lib/db/schema';
 import { cx } from '@/lib/utils';
 import { useListStore } from '@/store/list/store';
 import { TaskCheck } from './TaskCheck';
 import { TaskPriority } from './TaskPriority';
-import { TaskTag } from './TaskTag';
 
 type Props = {
-  index: number;
-  initialTask: TaskWithRelations;
+  initialTask: _Task;
 };
 
 const dispatch = useListStore.getState().dispatch;
 
-export const Task = ({ index, initialTask }: Props) => {
-  const task = useListStore((state) => state.data.tasks?.get(index) ?? initialTask);
+export const Task = ({ initialTask }: Props) => {
+  const task = useListStore((state) => state.data.tasks?.get(initialTask.publicId) ?? initialTask);
 
   return (
     <li className={cx('flex space-x-3 px-3 py-3 hover:bg-[#ffffff04] text-sm rounded-lg items-center')}>
@@ -25,8 +23,10 @@ export const Task = ({ index, initialTask }: Props) => {
           dispatch({
             type: 'UPDATE_TASK',
             payload: {
-              index,
-              isComplete: Boolean(checked.valueOf()),
+              publicId: initialTask.publicId,
+              updates: {
+                isComplete: Boolean(checked.valueOf()),
+              },
             },
           });
         }}
@@ -38,10 +38,9 @@ export const Task = ({ index, initialTask }: Props) => {
             'line-through text-white/20': task.isComplete,
           })}
         >
-          {task.name}
+          {task.title}
         </span>
       </div>
-      <ul>{task.tags?.map((tag, index) => <TaskTag key={index} tag={tag} />)}</ul>
     </li>
   );
 };

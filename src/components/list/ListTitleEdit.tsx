@@ -10,7 +10,7 @@ type Props = {
 
 const dispatch = useListStore.getState().dispatch;
 
-export const EditListTitle = ({ initialTitle }: Props) => {
+export const ListTitleStatic = ({ initialTitle }: Props) => {
   const title = useListStore((state) => state.data.list?.title ?? initialTitle);
 
   const titleRef = useRef(initialTitle);
@@ -30,7 +30,9 @@ export const EditListTitle = ({ initialTitle }: Props) => {
         dispatch({
           type: 'UPDATE_LIST',
           payload: {
-            title: e.currentTarget.textContent ?? '',
+            updates: {
+              title: e.currentTarget.textContent ?? '',
+            },
           },
         });
       }}

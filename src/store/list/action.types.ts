@@ -17,24 +17,23 @@ interface InitializeAction extends BaseAction<'INITIALIZE'> {
 
 interface UpdateListAction extends BaseAction<'UPDATE_LIST'> {
   payload: {
-    list: Partial<List>;
+    updates: Partial<List>;
   };
 }
 
 interface NewTaskAction extends BaseAction<'NEW_TASK'> {
   payload: {
     task: {
-      name: string;
+      title: string;
       priorityLevel?: number;
     };
-    tags: Partial<Tag>[];
   };
 }
 
 interface UpdateTaskAction extends BaseAction<'UPDATE_TASK'> {
   payload: {
-    index: number;
-    task: Partial<Task>;
+    publicId: string;
+    updates: Partial<Task>;
   };
 }
 

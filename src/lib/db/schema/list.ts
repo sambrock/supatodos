@@ -6,7 +6,7 @@ import { tag } from './tag';
 export const list = mysqlTable('lists', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
   publicId: varchar('publicId', { length: 12 }).unique().notNull(),
-  name: text('name').notNull().default(''),
+  title: text('title').notNull().default(''),
   createdAt: datetime('createdAt').default(sql`CURRENT_TIMESTAMP`),
   updatedAt: datetime('updatedAt').default(sql`CURRENT_TIMESTAMP`),
 });

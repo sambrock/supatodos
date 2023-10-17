@@ -10,35 +10,25 @@ const pushTransactions = useTransactionsStore.getState().push;
 const initializeStore = produce((draft: Draft<ListStore>, payload: ActionPayload<'INITIALIZE'>) => {
   const { list, tasks, tags } = payload;
   draft.data.list = list;
-  draft.data.tasks = new Map(tasks.map((task, index) => [index, task]));
-  draft.data.tags = new Map(tags.map((tag, index) => [index, tag]));
+  draft.data.tasks = new Map(tasks.map((task, index) => [task.publicId, task]));
+  // draft.data.tags = new Map(tags.map((tag, index) => [index, tag]));
 });
 
 const updateList = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'UPDATE_LIST'>) => {
+  const { updates } = payload;
   const list = draft.data.list;
 
-  if (list) {
-    Object.assign(list, payload);
-  }
+  if (list) Object.assign(list, updates);
 });
 
 const newTask = produce((draft: Draft<ListStore>, payload: ActionPayload<'NEW_TASK'>) => {
-  let tags = payload.tags;
-  if (tags.filter((tag) => tag.publicId === '').length > 0) {
-    const publicId = generatePublicId();
-    draft.data.tags!.set(publicId, {
-      color: 1,
-    });
-  }
-
   const task = payload.task;
-  const size = draft.data.tasks!.size;
+  const taskPublicId = generatePublicId();
 
-  draft.data.tasks!.set(size, {
-    name: task.name,
-    publicId: generatePublicId(),
+  draft.data.tasks!.set(taskPublicId, {
+    title: task.title,
+    publicId: taskPublicId,
     priorityLevel: task.priorityLevel || 1,
-    tags: [],
     isComplete: false,
     completedAt: null,
     createdAt: new Date(),
@@ -47,13 +37,10 @@ const newTask = produce((draft: Draft<ListStore>, payload: ActionPayload<'NEW_TA
 });
 
 const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'UPDATE_TASK'>) => {
-  const { index, ...updates } = payload;
-  const task = draft.data.tasks!.get(index);
-  // draft.data.tasks!.set(index, { ...task, ...updates });
+  const { publicId, updates } = payload;
+  const task = draft.data.tasks!.get(publicId);
 
-  if (task) {
-    Object.assign(task, updates);
-  }
+  if (task) Object.assign(task, updates);
 });
 
 export const reducer = (state: ListStore, action: Action): ListStore => {
