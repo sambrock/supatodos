@@ -11,8 +11,9 @@ export type ListStore = {
   patches: {
     stack: [Patch[], Patch[]][]; // patches, inverse patches
     stackPointer: number;
-    saved: Patch[][];
   };
+
+  transactions: Patch[][];
 
   dispatch: (action: Action) => void;
 };

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { type Patch, applyPatches, enableMapSet, enablePatches } from 'immer';
+import { applyPatches, enableMapSet, enablePatches } from 'immer';
 import type { ListStore } from './store.types';
 import { reducer } from './reducer';
 
@@ -15,13 +15,14 @@ export const useListStore = create<ListStore>((set) => ({
   patches: {
     stack: [],
     stackPointer: -1,
-    saved: [],
   },
+
+  transactions: [],
 
   dispatch: (action) => set((state) => reducer(state, action)),
 }));
 
-const handleListStoreUndo = (savePatches?: (patches: Patch[]) => void) => {
+const undo = () => {
   const state = useListStore.getState();
   if (state.patches.stackPointer < 0) return;
   const [, inverse] = state.patches.stack[state.patches.stackPointer];
@@ -32,12 +33,12 @@ const handleListStoreUndo = (savePatches?: (patches: Patch[]) => void) => {
     patches: {
       ...newState.patches,
       stackPointer: state.patches.stackPointer - 1,
-      saved: newState.patches.saved.concat([inverse]),
     },
+    transactions: newState.transactions.concat([inverse]),
   });
 };
 
-const handleListStoreRedo = (savePatches?: (patches: Patch[]) => void) => {
+const redo = () => {
   const state = useListStore.getState();
   if (state.patches.stackPointer >= state.patches.stack.length - 1) return;
   const [patches] = state.patches.stack[state.patches.stackPointer + 1];
@@ -48,12 +49,21 @@ const handleListStoreRedo = (savePatches?: (patches: Patch[]) => void) => {
     patches: {
       ...newState.patches,
       stackPointer: state.patches.stackPointer + 1,
-      saved: newState.patches.saved.concat([patches]),
     },
+    transactions: newState.transactions.concat([patches]),
+  });
+};
+
+const clearTransactions = () => {
+  const state = useListStore.getState();
+  useListStore.setState({
+    ...state,
+    transactions: [],
   });
 };
 
 export const listStoreHandlers = {
-  undo: handleListStoreUndo,
-  redo: handleListStoreRedo,
+  undo,
+  redo,
+  clearTransactions,
 };

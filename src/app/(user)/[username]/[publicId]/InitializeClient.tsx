@@ -13,10 +13,12 @@ type Props = {
 
 const dispatch = useListStore.getState().dispatch;
 
-useListStore.subscribe((state, prevState) => {
-  if (state.patches.saved.length === 0) return;
-  if (state.patches.saved.length === prevState.patches.saved.length) return;
-  console.log('should save', state.patches.saved[state.patches.saved.length - 1]);
+useListStore.subscribe((state) => {
+  if (state.transactions.length === 0) return;
+
+  console.log('transactions: ', state.transactions);
+  fetch('/api/v1/saveTransactions', { method: 'POST', body: JSON.stringify(state.transactions) });
+  listStoreHandlers.clearTransactions();
 });
 
 export const InitializeClient = ({ initialList, initialTasks, initialTags }: Props) => {

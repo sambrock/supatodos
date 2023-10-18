@@ -5,7 +5,7 @@ import type { Action, ActionPayload } from './action.types';
 import { generatePublicId } from '@/lib/utils';
 
 const initializeStore = produce((draft: Draft<ListStore>, payload: ActionPayload<'INITIALIZE'>) => {
-  const { list, tasks, tags } = payload;
+  const { list, tasks } = payload;
   draft.data.list = list;
   draft.data.tasks = new Map(tasks.map((task, index) => [task.publicId, task]));
 });
@@ -42,7 +42,7 @@ const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionP
 const newStateWithPatches = produce((draft: Draft<ListStore>, patches: [Patch[], Patch[]]) => {
   draft.patches.stack = draft.patches.stack.slice(0, draft.patches.stackPointer + 1).concat([patches]);
   draft.patches.stackPointer = draft.patches.stackPointer + 1;
-  draft.patches.saved = draft.patches.saved.concat([patches[0]]);
+  draft.transactions = draft.transactions.concat([patches[0]]);
 });
 
 export const reducer = (state: ListStore, action: Action): ListStore => {
