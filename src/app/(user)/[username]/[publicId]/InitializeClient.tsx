@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useEventListener } from 'usehooks-ts';
 import type { List, Tag, TaskWithRelations } from '@/lib/db/schema';
-import { listStoreHandlers, useListStore } from '@/store/list-edit/store';
+import { listStoreHandlers, useListStore } from '@/store/store';
 
 type Props = {
   initialList: List;
@@ -16,7 +16,6 @@ const dispatch = useListStore.getState().dispatch;
 useListStore.subscribe((state) => {
   if (state.transactions.length === 0) return;
 
-  console.log('transactions: ', state.transactions);
   fetch('/api/v1/saveTransactions', { method: 'POST', body: JSON.stringify(state.transactions) });
   listStoreHandlers.clearTransactions();
 });

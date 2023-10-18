@@ -2,7 +2,7 @@
 
 import type { Task as _Task } from '@/lib/db/schema';
 import { cx } from '@/lib/utils';
-import { useListStore } from '@/store/list-edit/store';
+import { useListStore } from '@/store/store';
 import { TaskCheck } from './TaskCheck';
 import { TaskPriority } from './TaskPriority';
 

@@ -2,7 +2,7 @@
 
 import { Plus } from 'lucide-react';
 import { cx } from '@/lib/utils';
-import { useListStore } from '@/store/list-edit/store';
+import { useListStore } from '@/store/store';
 
 const dispatch = useListStore.getState().dispatch;
 
