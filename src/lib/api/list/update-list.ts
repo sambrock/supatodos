@@ -2,7 +2,7 @@ import { type Patch } from 'immer';
 import { eq } from 'drizzle-orm';
 import { db } from '../../db';
 import { list as _list, task } from '../../db/schema';
-import { Api } from '../client.types';
+import { Api } from '../api.types';
 
 export type POST_UpdateList = Api.PostRoute<{
   url: '/api/v1/updateList';

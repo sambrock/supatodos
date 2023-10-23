@@ -1,8 +1,8 @@
-import { getInitialListData } from '@/lib/api/list/get-initial-list-data';
+import { getInitialList } from '@/lib/api/list/get-initial-list';
 import { ListHeader } from '@/components/list/ListHeader';
 import { NewTask } from '@/components/new-task/NewTask';
-import { InitializeClient } from './InitializeClient';
 import { List } from '@/components/list/List';
+import { InitializeClient } from './InitializeClient';
 
 type Props = {
   params: {
@@ -14,9 +14,9 @@ type Props = {
 export default async function UserListPage({ params }: Props) {
   const { username, publicId } = params;
 
-  const response = await getInitialListData(publicId);
+  const response = await getInitialList(publicId);
 
-  if (!response.success) return <div>error</div>;
+  if (response.error) return <div>{response.error.name}</div>;
   const { data } = response;
 
   return (

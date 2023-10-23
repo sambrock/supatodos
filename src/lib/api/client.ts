@@ -1,6 +1,6 @@
 import type { RequestInit } from 'next/dist/server/web/spec-extension/request';
 
-import type { Api } from './client.types';
+import type { Api } from './api.types';
 import { BASE_URL } from '@/lib/constants';
 import { buildQueryString } from '@/lib/utils';
 

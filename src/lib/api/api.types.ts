@@ -1,4 +1,5 @@
 import { POST_UpdateList } from '@/lib/api/list/update-list';
+import { ZodError } from 'zod';
 
 type ApiRoutes = POST_UpdateList;
 
@@ -33,3 +34,5 @@ export namespace Api {
   export type ApiPatchRouteUrls = Extract<ApiRoutes, { method: 'PATCH' }>['url'];
   export type ApiPutRouteUrls = Extract<ApiRoutes, { method: 'PUT' }>['url'];
 }
+
+export type ApiError = { errorSrc: 'db'; error: Error } | { errorSrc: 'zod'; error: ZodError };
