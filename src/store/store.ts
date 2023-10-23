@@ -17,7 +17,7 @@ export const useListStore = create<ListStore>((set) => ({
     stackPointer: -1,
   },
 
-  transactions: [],
+  operations: [],
 
   dispatch: (action) => set((state) => reducer(state, action)),
 }));
@@ -34,7 +34,7 @@ const undo = () => {
       ...newState.patches,
       stackPointer: state.patches.stackPointer - 1,
     },
-    transactions: newState.transactions.concat([inverse]),
+    operations: newState.operations.concat(inverse),
   });
 };
 
@@ -50,20 +50,20 @@ const redo = () => {
       ...newState.patches,
       stackPointer: state.patches.stackPointer + 1,
     },
-    transactions: newState.transactions.concat([patches]),
+    operations: newState.operations.concat(patches),
   });
 };
 
-const clearTransactions = () => {
+const clearOperations = () => {
   const state = useListStore.getState();
   useListStore.setState({
     ...state,
-    transactions: [],
+    operations: [],
   });
 };
 
 export const listStoreHandlers = {
   undo,
   redo,
-  clearTransactions,
+  clearOperations,
 };

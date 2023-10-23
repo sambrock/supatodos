@@ -13,7 +13,7 @@ export type ListStore = {
     stackPointer: number;
   };
 
-  transactions: Patch[][];
+  operations: Patch[];
 
   dispatch: (action: Action) => void;
 };

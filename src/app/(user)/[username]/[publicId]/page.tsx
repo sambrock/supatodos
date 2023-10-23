@@ -1,4 +1,4 @@
-import { getInitialListData } from '@/lib/api/getInitialListData';
+import { getInitialListData } from '@/lib/api/list/get-initial-list-data';
 import { ListHeader } from '@/components/list/ListHeader';
 import { NewTask } from '@/components/new-task/NewTask';
 import { InitializeClient } from './InitializeClient';

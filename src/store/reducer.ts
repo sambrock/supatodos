@@ -12,9 +12,12 @@ const initializeStore = produce((draft: Draft<ListStore>, payload: ActionPayload
 
 const updateList = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'UPDATE_LIST'>) => {
   const { updates } = payload;
-  const list = draft.data.list;
+  draft.data.list = {
+    ...draft.data.list!,
+    ...updates,
+  };
 
-  if (list) Object.assign(list, updates);
+  // if (list) Object.assign(list, updates);
 });
 
 const newTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'NEW_TASK'>) => {
@@ -42,7 +45,8 @@ const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionP
 const newStateWithPatches = produce((draft: Draft<ListStore>, patches: [Patch[], Patch[]]) => {
   draft.patches.stack = draft.patches.stack.slice(0, draft.patches.stackPointer + 1).concat([patches]);
   draft.patches.stackPointer = draft.patches.stackPointer + 1;
-  draft.transactions = draft.transactions.concat([patches[0]]);
+  console.log('reducer', patches[0]);
+  draft.operations = draft.operations.concat(patches[0]);
 });
 
 export const reducer = (state: ListStore, action: Action): ListStore => {

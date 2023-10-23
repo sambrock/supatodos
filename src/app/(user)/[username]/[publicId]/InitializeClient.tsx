@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useEventListener } from 'usehooks-ts';
+import { client } from '@/lib/api/client';
 import type { List, Tag, TaskWithRelations } from '@/lib/db/schema';
 import { listStoreHandlers, useListStore } from '@/store/store';
 
@@ -14,10 +15,10 @@ type Props = {
 const dispatch = useListStore.getState().dispatch;
 
 useListStore.subscribe((state) => {
-  if (state.transactions.length === 0) return;
+  if (state.operations.length === 0) return;
 
-  fetch('/api/v1/saveTransactions', { method: 'POST', body: JSON.stringify(state.transactions) });
-  listStoreHandlers.clearTransactions();
+  client.post('/api/v1/updateList', [{ id: state.data.list!.publicId, operations: state.operations }]);
+  listStoreHandlers.clearOperations();
 });
 
 export const InitializeClient = ({ initialList, initialTasks, initialTags }: Props) => {

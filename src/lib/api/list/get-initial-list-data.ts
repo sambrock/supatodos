@@ -1,8 +1,7 @@
 import { cache } from 'react';
 import { eq } from 'drizzle-orm';
-import { db } from '../db';
-import { list } from '../db/schema';
-import type { Api } from './api.types';
+import { db } from '../../db';
+import { list } from '../../db/schema';
 
 export const getInitialListData = cache(async (publicId: string) => {
   const data = await db.query.list.findFirst({
@@ -27,9 +26,6 @@ export const getInitialListData = cache(async (publicId: string) => {
       },
     },
     columns: { id: false },
-    // extras: {
-    //   tasksSize: sql<number>`length(${tag.id})`.as('tasks_size'),
-    // },
   });
 
   if (!data)
@@ -51,4 +47,4 @@ export const getInitialListData = cache(async (publicId: string) => {
       initialTags: tags,
     },
   };
-}) satisfies Api;
+});

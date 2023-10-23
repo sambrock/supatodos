@@ -25,7 +25,6 @@ export const Task = ({ initialTask }: Props) => {
             payload: {
               publicId: initialTask.publicId,
               updates: {
-                title: 'Completed!!',
                 isComplete: Boolean(checked.valueOf()),
               },
             },

@@ -15,3 +15,13 @@ export const cx = (...inputs: ClassValue[]) => {
 export const timeAgo = (timestamp: Date, timeOnly?: boolean): string => {
   return `${ms(Date.now() - new Date(timestamp).getTime())}${timeOnly ? '' : ' ago'}`;
 };
+
+type QueryParams = { [key: string]: string | number | boolean | undefined };
+
+export const buildQueryString = (params: QueryParams): string => {
+  const query = Object.entries(params)
+    .filter(([_, value]) => value !== undefined)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value!)}`)
+    .join('&');
+  return query ? `?${query}` : '';
+};
