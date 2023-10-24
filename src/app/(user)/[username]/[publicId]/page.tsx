@@ -3,6 +3,7 @@ import { ListHeader } from '@/components/list/ListHeader';
 import { NewTask } from '@/components/new-task/NewTask';
 import { List } from '@/components/list/List';
 import { InitializeClient } from './InitializeClient';
+import { ListNavBar } from '@/components/list/ListNavBar';
 
 type Props = {
   params: {
@@ -21,15 +22,16 @@ export default async function UserListPage({ params }: Props) {
 
   return (
     <main className="justify-between pb-6 pt-6 container mx-auto">
-      <ListHeader
+      {/* <ListHeader
         username={username}
         title={data.initialList.title || ''}
         updatedAt={data.initialList.updatedAt || new Date()}
-      />
+      /> */}
 
+      <ListNavBar />
       <List initialTasks={data.initialTasks} />
 
-      <NewTask className="bottom-4 z-50 fixed container" />
+      {/* <NewTask className="bottom-4 z-50 fixed container" /> */}
 
       <InitializeClient
         initialList={data.initialList}

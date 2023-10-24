@@ -16,7 +16,7 @@ export const Task = ({ initialTask }: Props) => {
   const task = useListStore((state) => state.data.tasks?.get(initialTask.publicId) ?? initialTask);
 
   return (
-    <li className={cx('flex space-x-3 px-3 py-3 hover:bg-[#ffffff04] text-sm rounded-lg items-center')}>
+    <li className={cx('flex space-x-3 px-3 py-3 hover:bg-neutral-800 text-sm rounded-lg items-center')}>
       <TaskCheck
         isComplete={task.isComplete ?? false}
         onCheckedChange={(checked) => {
@@ -32,7 +32,7 @@ export const Task = ({ initialTask }: Props) => {
         }}
       />
       <div className={cx('w-full max-w-sm flex')}>
-        <TaskPriority className="mr-2" priorityLevel={task.priorityLevel} />
+        <TaskPriority className="mr-2" priorityLevel={task.priorityLevel} isComplete={task.isComplete} />
         <span
           className={cx({
             'line-through text-white/20': task.isComplete,

@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body
-        className={cx(fontSans.variable, fontLogo.variable, fontMono.variable, 'font-sans bg-[#0b0e14] text-[#bfbdb6]')}
+        className={cx(fontSans.variable, fontLogo.variable, fontMono.variable, 'font-sans bg-neutral-900 text-neutral-200')}
       >
         {children}
       </body>

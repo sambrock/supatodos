@@ -7,6 +7,11 @@ enablePatches();
 enableMapSet();
 
 export const useListStore = create<ListStore>((set) => ({
+  // sync / unsync
+
+  // sync state is sycned with the server
+  // unsync state is not synced with the server
+
   data: {
     list: null,
     tasks: null,

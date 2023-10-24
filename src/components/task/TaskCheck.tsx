@@ -10,13 +10,13 @@ export const TaskCheck = ({ isComplete, ...inputProps }: Props) => {
   return (
     <Checkbox.Root
       checked={isComplete}
-      className={cx('w-4 h-4 border border-white/10 rounded focus:outline-none', {
-        'bg-[#c79d48]': isComplete,
+      className={cx('w-4 h-4 border border-neutral-700 rounded focus:outline-none', {
+        'bg-neutral-800': isComplete,
       })}
       {...inputProps}
     >
       <Checkbox.Indicator className={cx('flex items-center justify-center text-current')}>
-        <Check className="h-3.5 w-3.5 text-black font-semibold" />
+        <Check className="h-3 w-3 text-neutral-600 font-semibold" />
       </Checkbox.Indicator>
     </Checkbox.Root>
   );
