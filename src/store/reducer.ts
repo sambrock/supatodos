@@ -5,9 +5,10 @@ import type { Action, ActionPayload } from './action.types';
 import { generatePublicId } from '@/lib/utils';
 
 const initializeStore = produce((draft: Draft<ListStore>, payload: ActionPayload<'INITIALIZE'>) => {
-  const { list, tasks } = payload;
+  const { list, tasks, counts } = payload;
   draft.data.list = list;
   draft.data.tasks = new Map(tasks.map((task, index) => [task.publicId, task]));
+  draft.data.counts = counts;
 });
 
 const updateList = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'UPDATE_LIST'>) => {
@@ -33,6 +34,8 @@ const newTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayl
     createdAt: new Date(),
     updatedAt: new Date(),
   });
+
+  draft.data.counts!.tasks = draft.data.counts!.tasks + 1;
 });
 
 const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'UPDATE_TASK'>) => {
@@ -40,12 +43,22 @@ const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionP
   const task = draft.data.tasks!.get(publicId);
 
   if (task) Object.assign(task, updates);
+
+  if (updates.isComplete !== null || updates.isComplete !== undefined) {
+    if (updates.isComplete) {
+      draft.data.counts!.tasks = draft.data.counts!.tasks - 1;
+      draft.data.counts!.complete = draft.data.counts!.complete + 1;
+    } else {
+      draft.data.counts!.tasks = draft.data.counts!.tasks + 1;
+      draft.data.counts!.complete = draft.data.counts!.complete - 1;
+    }
+  }
 });
 
 const newStateWithPatches = produce((draft: Draft<ListStore>, patches: [Patch[], Patch[]]) => {
   draft.patches.stack = draft.patches.stack.slice(0, draft.patches.stackPointer + 1).concat([patches]);
   draft.patches.stackPointer = draft.patches.stackPointer + 1;
-  console.log('reducer', patches[0]);
+
   draft.operations = draft.operations.concat(patches[0]);
 });
 

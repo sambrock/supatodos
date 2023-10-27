@@ -10,6 +10,10 @@ type Props = {
   initialList: List;
   initialTasks: TaskWithRelations[];
   initialTags: Tag[];
+  initialCounts: {
+    tasks: number;
+    complete: number;
+  };
 };
 
 const dispatch = useListStore.getState().dispatch;
@@ -21,7 +25,7 @@ useListStore.subscribe((state) => {
   listStoreHandlers.clearOperations();
 });
 
-export const InitializeClient = ({ initialList, initialTasks, initialTags }: Props) => {
+export const InitializeClient = ({ initialList, initialTasks, initialTags, initialCounts }: Props) => {
   useEffect(() => {
     dispatch({
       type: 'INITIALIZE',
@@ -29,6 +33,7 @@ export const InitializeClient = ({ initialList, initialTasks, initialTags }: Pro
         list: initialList,
         tasks: initialTasks,
         tags: initialTags,
+        counts: initialCounts,
       },
     });
   }, []);

@@ -12,6 +12,10 @@ interface InitializeAction extends BaseAction<'INITIALIZE'> {
     list: List;
     tasks: Task[];
     tags: Tag[];
+    counts: {
+      tasks: number;
+      complete: number;
+    };
   };
 }
 

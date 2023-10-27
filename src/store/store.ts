@@ -15,6 +15,7 @@ export const useListStore = create<ListStore>((set) => ({
   data: {
     list: null,
     tasks: null,
+    counts: null
   },
 
   patches: {

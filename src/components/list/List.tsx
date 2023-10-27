@@ -1,11 +1,11 @@
 'use client';
 
-import { Task as _Task } from '@/lib/db/schema';
+import { Task as TaskSchema } from '@/lib/db/schema';
 import { useListStore } from '@/store/store';
 import { Task } from '../task/Task';
 
 type Props = {
-  initialTasks: _Task[];
+  initialTasks: TaskSchema[];
 };
 
 export const List = ({ initialTasks }: Props) => {
@@ -13,7 +13,7 @@ export const List = ({ initialTasks }: Props) => {
 
   return (
     <div>
-      <ul className="my-4 grid grid-cols-1 gap-3">
+      <ul className="my-4 grid grid-cols-1 gap-1">
         {tasks.map((task, index) => (
           <Task key={index} initialTask={task} />
         ))}

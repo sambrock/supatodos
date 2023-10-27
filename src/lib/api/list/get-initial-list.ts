@@ -1,7 +1,7 @@
 import { cache } from 'react';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from '../../db';
-import { list } from '../../db/schema';
+import { list, task } from '../../db/schema';
 import type { ApiError } from '../api.types';
 
 export const getInitialList = cache(async (publicId: string) => {
@@ -26,7 +26,10 @@ export const getInitialList = cache(async (publicId: string) => {
         },
       },
     },
-    columns: { id: false },
+    // columns: { id: false },
+    // extras: {
+    //   totalTasks: sql<number>`(select count(*) from ${task} where ${task.listId} = ${list.id})`.as('totalTasks'),
+    // },
   });
 
   if (!data)
@@ -38,6 +41,27 @@ export const getInitialList = cache(async (publicId: string) => {
       },
     } satisfies ApiError;
 
+  // const counts = await db.execute(
+  //   // (select count(*) from ${task} where ${task.listId} = ${data.id})
+  //   sql<number>`(select count(*) from ${task} where ${task.listId} = ${data.id})`
+  // );
+
+  const countTask = await db
+    .select({
+      count: sql<number>`count(*)`,
+    })
+    .from(task)
+    .where(eq(task.listId, data.id))
+    .where(eq(task.isComplete, false));
+
+  const countComplete = await db
+    .select({
+      count: sql<number>`count(*)`,
+    })
+    .from(task)
+    .where(eq(task.listId, data.id))
+    .where(eq(task.isComplete, true));
+
   const { tasks, tags, ...initialList } = data;
 
   return {
@@ -45,6 +69,10 @@ export const getInitialList = cache(async (publicId: string) => {
       initialList,
       initialTasks: tasks.map((task) => ({ ...task, tags: task.tags.map(({ tag }) => tag.publicId) })),
       initialTags: tags,
+      initialCounts: {
+        tasks: countTask[0].count,
+        complete: countComplete[0].count,
+      },
     },
   };
 });

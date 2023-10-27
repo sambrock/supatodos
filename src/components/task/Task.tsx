@@ -1,13 +1,13 @@
 'use client';
 
+import { useRef } from 'react';
+import { useHover } from 'usehooks-ts';
+import { MoreHorizontal } from 'lucide-react';
 import type { Task as _Task } from '@/lib/db/schema';
 import { cx } from '@/lib/utils';
 import { useListStore } from '@/store/store';
 import { TaskCheck } from './TaskCheck';
 import { TaskPriority } from './TaskPriority';
-import { MoreHorizontal } from 'lucide-react';
-import { useHover } from 'usehooks-ts';
-import { useRef } from 'react';
 
 type Props = {
   initialTask: _Task;

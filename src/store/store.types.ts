@@ -6,6 +6,10 @@ export type ListStore = {
   data: {
     list: List | null;
     tasks: Map<string, Task> | null;
+    counts: {
+      tasks: number;
+      complete: number;
+    } | null;
   };
 
   patches: {

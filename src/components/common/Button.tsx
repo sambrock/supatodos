@@ -8,8 +8,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        solid: 'bg-neutral-800 text-neutral-200',
-        ghost: 'border',
+        solid: '',
+        ghost: 'border bg-transparent',
       },
       tone: {
         neutral: '',
@@ -20,30 +20,25 @@ const buttonVariants = cva(
         default: 'py-1 px-3',
         small: 'py-0.5 px-2',
       },
+      active: {
+        true: '',
+        false: '',
+      },
     },
 
     compoundVariants: [
-      {
-        variant: 'ghost',
-        tone: 'neutral',
-        className: 'border-neutral-800 text-neutral-400 hover:bg-neutral-800/60',
-      },
-      {
-        variant: 'ghost',
-        tone: 'tag_blue',
-        className: 'border-[#2A6FC9cc] text-[#2A6FC9CC] hover:bg-[#2A6FC920]',
-      },
-      {
-        variant: 'ghost',
-        tone: 'tag_orange',
-        className: 'border-[#D55700cc] text-[#D55700CC] hover:bg-[#D5570020]',
-      },
+      { variant: 'solid', tone: 'neutral', active: false, className: 'bg-neutral-800 text-neutral-200 hover:bg-neutral-700' }, // prettier-ignore
+      { variant: 'solid', tone: 'neutral', active: true, className: 'bg-neutral-800 text-neutral-200' }, // prettier-ignore
+      { variant: 'ghost', tone: 'neutral', className: 'border-neutral-800 text-neutral-400 hover:text-neutral-200' }, // prettier-ignore
+      { variant: 'ghost', tone: 'tag_blue', className: 'border-[#2A6FC9cc] text-[#2A6FC9CC] hover:bg-[#2A6FC920]' }, // prettier-ignore
+      { variant: 'ghost', tone: 'tag_orange', className: 'border-[#D55700cc] text-[#D55700CC] hover:bg-[#D5570020]' }, // prettier-ignore
     ],
 
     defaultVariants: {
       variant: 'solid',
       tone: 'neutral',
       size: 'default',
+      active: false,
     },
   }
 );
@@ -57,16 +52,16 @@ type ButtonProps<C extends React.ElementType> = PolymorphicComponentProps<
 >;
 
 const ButtonComponent = <C extends React.ElementType>(
-  { as, variant, size, tone, ...props }: ButtonProps<C>,
+  { as, variant, size, tone, active, leading, trailing, ...props }: ButtonProps<C>,
   ref: React.ForwardedRef<HTMLButtonElement>
 ) => {
   const Component = as || 'button';
 
   return (
-    <Component ref={ref} {...props} className={cx(buttonVariants({ variant, size, tone }))}>
-      {props.leading && <span className="mr-2">{props.leading}</span>}
+    <Component ref={ref} {...props} className={cx(buttonVariants({ variant, size, tone, active }))}>
+      {leading && <span className="mr-2">{leading}</span>}
       {props.children}
-      {props.trailing && <span className="ml-2">{props.trailing}</span>}
+      {trailing && <span className="ml-2">{trailing}</span>}
     </Component>
   );
 };
