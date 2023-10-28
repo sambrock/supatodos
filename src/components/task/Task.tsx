@@ -8,6 +8,8 @@ import { cx } from '@/lib/utils';
 import { useListStore } from '@/store/store';
 import { TaskCheck } from './TaskCheck';
 import { TaskPriority } from './TaskPriority';
+import { TaskTitle } from './TaskTitle';
+import { TaskTitleStatic } from './TaskTitleStatic';
 
 type Props = {
   initialTask: _Task;
@@ -22,7 +24,7 @@ export const Task = ({ initialTask }: Props) => {
   const hover = useHover(liRef);
 
   return (
-    <li ref={liRef} className={cx('flex space-x-3 px-3 py-3 hover:bg-neutral-800/20 text-sm rounded-lg items-center')}>
+    <li ref={liRef} className={cx('flex space-x-3 px-3 py-3 hover:bg-neutral-800/50 text-sm rounded-md items-center')}>
       <TaskCheck
         isComplete={task.isComplete ?? false}
         onCheckedChange={(checked) => {
@@ -30,24 +32,20 @@ export const Task = ({ initialTask }: Props) => {
             type: 'UPDATE_TASK',
             payload: {
               publicId: initialTask.publicId,
-              updates: {
-                isComplete: Boolean(checked.valueOf()),
-              },
+              updates: { isComplete: Boolean(checked.valueOf()) },
             },
           });
         }}
       />
       <div className={cx('w-full flex items-center')}>
         <TaskPriority className="mr-2" priorityLevel={task.priorityLevel} isComplete={task.isComplete} />
-        <span
-          className={cx({
-            'line-through text-white/20': task.isComplete,
-          })}
-        >
-          {task.title}
-        </span>
+        {!task.isComplete ? (
+          <TaskTitle initialTitle={task.title} publicId={initialTask.publicId} />
+        ) : (
+          <TaskTitleStatic title={task.title} isComplete={task.isComplete} />
+        )}
       </div>
-      <div className={cx('ml-auto', hover ? 'visible' : 'invisible')}>
+      <div className={cx('', hover ? 'visible' : 'invisible')}>
         <MoreHorizontal className="text-xs h-4 w-6 text-neutral-500 leading-none" />
       </div>
     </li>

@@ -42,6 +42,7 @@ export const InitializeClient = ({ initialList, initialTasks, initialTags, initi
     if (e.key === 'z' && e.metaKey && e.shiftKey) {
       e.preventDefault();
       listStoreHandlers.redo();
+      console.log('redo');
       return;
     }
     if (e.key === 'z' && e.metaKey) {

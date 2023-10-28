@@ -42,9 +42,9 @@ const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionP
   const { publicId, updates } = payload;
   const task = draft.data.tasks!.get(publicId);
 
-  if (task) Object.assign(task, updates);
-
-  if (updates.isComplete !== null || updates.isComplete !== undefined) {
+  if (updates.isComplete !== null && updates.isComplete !== undefined) {
+    console.log(updates.isComplete, draft.data.tasks!.get(publicId)?.isComplete);
+    if (updates.isComplete === task?.isComplete) return;
     if (updates.isComplete) {
       draft.data.counts!.tasks = draft.data.counts!.tasks - 1;
       draft.data.counts!.complete = draft.data.counts!.complete + 1;
@@ -53,6 +53,8 @@ const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionP
       draft.data.counts!.complete = draft.data.counts!.complete - 1;
     }
   }
+
+  if (task) Object.assign(task, updates);
 });
 
 const newStateWithPatches = produce((draft: Draft<ListStore>, patches: [Patch[], Patch[]]) => {
