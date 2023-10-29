@@ -3,6 +3,7 @@
 import { useListStore } from '@/store/store';
 import { Button } from '../common/Button';
 import { type ListStore } from '@/store/store.types';
+import { Check, CheckSquare, Square } from 'lucide-react';
 
 type Props = {
   initialCounts: {
@@ -20,10 +21,20 @@ export const ListNavBar = ({ initialCounts }: Props) => {
 
   return (
     <div className="flex items-center space-x-2">
-      <Button as="a" active={true} trailing={<span className="text-xs text-neutral-400">{tasksCount}</span>}>
+      <Button
+        as="a"
+        active={true}
+        // leading={<Square className="text-neutral-500 h-3.5 w-3.5 -ml-1" />}
+        trailing={<span className="text-xs text-neutral-400">{tasksCount}</span>}
+      >
         Tasks
       </Button>
-      <Button as="a" variant="ghost" trailing={<span className="text-xs text-neutral-400">{completeCount}</span>}>
+      <Button
+        as="a"
+        variant="ghost"
+        // leading={<CheckSquare className="text-neutral-500 h-3.5 w-3.5 -ml-1" />}
+        trailing={<span className="text-xs text-neutral-400">{completeCount}</span>}
+      >
         Complete
       </Button>
       {/* <span className="text-white/10">|</span>

@@ -10,12 +10,18 @@ type Props = React.ComponentProps<'div'>;
 
 export const NewTask = ({ ...props }: Props) => {
   return (
-    <div {...props} className={cx(props.className, 'border border-white/5 rounded-lg px-3 w-full py-3')}>
+    <div
+      {...props}
+      className={cx(
+        props.className,
+        'group border bg-neutral-900/50 backdrop-blur-lg border-neutral-800 rounded-lg px-3 py-3'
+      )}
+    >
       <div className="flex space-x-2 items-center">
-        <Plus className="w-5 h-5 text-white/30 focus-within:text-white" />
+        <Plus className="w-4 h-4 text-neutral-600 group-focus-within:text-neutral-400" />
         <input
           type="text"
-          className="focus:outline-none bg-transparent w-full text-sm font-mono placeholder:text-white/30"
+          className="focus:outline-none bg-transparent w-full font-sans text-sm font-medium placeholder:text-neutral-500"
           placeholder="Do the laundry -priority !! -tags dev,ui"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {

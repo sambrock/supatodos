@@ -42,6 +42,10 @@ export const updateList = async (body: POST_UpdateList['body']) => {
                 .where(eq(task.publicId, id));
               break;
             }
+            case 'remove': {
+              await db.delete(task).where(eq(task.publicId, id));
+              break;
+            }
           }
         }
       }

@@ -1,6 +1,6 @@
 import type { List, Tag, Task } from '@/lib/db/schema';
 
-export type ActionType = 'INITIALIZE' | 'UPDATE_LIST' | 'NEW_TASK' | 'UPDATE_TASK';
+export type ActionType = 'INITIALIZE' | 'UPDATE_LIST' | 'NEW_TASK' | 'UPDATE_TASK' | 'DELETE_TASK';
 
 interface BaseAction<T extends ActionType> {
   type: T;
@@ -41,6 +41,12 @@ interface UpdateTaskAction extends BaseAction<'UPDATE_TASK'> {
   };
 }
 
-export type Action = InitializeAction | UpdateListAction | NewTaskAction | UpdateTaskAction;
+interface DeleteTaskAction extends BaseAction<'DELETE_TASK'> {
+  payload: {
+    publicId: string;
+  };
+}
+
+export type Action = InitializeAction | UpdateListAction | NewTaskAction | UpdateTaskAction | DeleteTaskAction;
 
 export type ActionPayload<T extends ActionType> = Extract<Action, { type: T }>['payload'];

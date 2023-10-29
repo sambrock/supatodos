@@ -1,5 +1,4 @@
 import { type Draft, produce, produceWithPatches, Patch } from 'immer';
-
 import type { ListStore } from './store.types';
 import type { Action, ActionPayload } from './action.types';
 import { generatePublicId } from '@/lib/utils';
@@ -7,7 +6,7 @@ import { generatePublicId } from '@/lib/utils';
 const initializeStore = produce((draft: Draft<ListStore>, payload: ActionPayload<'INITIALIZE'>) => {
   const { list, tasks, counts } = payload;
   draft.data.list = list;
-  draft.data.tasks = new Map(tasks.map((task, index) => [task.publicId, task]));
+  draft.data.tasks = new Map(tasks.map((task, index) => [task.publicId, { ...task, index }]));
   draft.data.counts = counts;
 });
 
@@ -33,6 +32,7 @@ const newTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayl
     completedAt: null,
     createdAt: new Date(),
     updatedAt: new Date(),
+    index: draft.data.tasks!.size,
   });
 
   draft.data.counts!.tasks = draft.data.counts!.tasks + 1;
@@ -43,7 +43,6 @@ const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionP
   const task = draft.data.tasks!.get(publicId);
 
   if (updates.isComplete !== null && updates.isComplete !== undefined) {
-    console.log(updates.isComplete, draft.data.tasks!.get(publicId)?.isComplete);
     if (updates.isComplete === task?.isComplete) return;
     if (updates.isComplete) {
       draft.data.counts!.tasks = draft.data.counts!.tasks - 1;
@@ -55,6 +54,19 @@ const updateTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionP
   }
 
   if (task) Object.assign(task, updates);
+});
+
+const deleteTask = produceWithPatches((draft: Draft<ListStore>, payload: ActionPayload<'DELETE_TASK'>) => {
+  const { publicId } = payload;
+  const task = draft.data.tasks!.get(publicId);
+
+  if (task?.isComplete) {
+    draft.data.counts!.complete = draft.data.counts!.complete - 1;
+  } else {
+    draft.data.counts!.tasks = draft.data.counts!.tasks - 1;
+  }
+
+  draft.data.tasks!.delete(publicId);
 });
 
 const newStateWithPatches = produce((draft: Draft<ListStore>, patches: [Patch[], Patch[]]) => {
@@ -81,6 +93,10 @@ export const reducer = (state: ListStore, action: Action): ListStore => {
     }
     case 'UPDATE_TASK': {
       const [newState, patches, inverse] = updateTask(state, action.payload);
+      return newStateWithPatches(newState, [patches, inverse]);
+    }
+    case 'DELETE_TASK': {
+      const [newState, patches, inverse] = deleteTask(state, action.payload);
       return newStateWithPatches(newState, [patches, inverse]);
     }
     default: {

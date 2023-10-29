@@ -4,7 +4,7 @@ import { PolymorphicComponentProps } from '@/lib/polymorphic.types';
 import { cx } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded text-sm font-medium select-none',
+  'cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded font-medium select-none',
   {
     variants: {
       variant: {
@@ -17,8 +17,8 @@ const buttonVariants = cva(
         tag_orange: '',
       },
       size: {
-        default: 'py-1 px-3',
-        small: 'py-0.5 px-2',
+        default: 'h-8 px-3 text-sm',
+        small: 'h-6 px-2 text-sm',
       },
       active: {
         true: '',

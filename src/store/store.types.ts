@@ -5,7 +5,7 @@ import type { Action } from './action.types';
 export type ListStore = {
   data: {
     list: List | null;
-    tasks: Map<string, Task> | null;
+    tasks: Map<string, Task & { index: number }> | null;
     counts: {
       tasks: number;
       complete: number;
